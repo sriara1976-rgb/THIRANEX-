@@ -1,12 +1,23 @@
-<header role="banner">
-        <div class="header-container">
-            <div class="logo">YS</div>
-            <nav aria-label="Main Navigation">
-                <ul>
-                    <li><a href="index.html" aria-current="page">Home</a></li>
-                    <li><a href="#projects-heading">Projects</a></li>
-                    <li><a href="#contact-heading">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<hr>
+
+        <section aria-labelledby="todo-heading">
+            <h2 id="todo-heading">Interactive Task Manager</h2>
+            <p>Mastering client-side state management, DOM manipulation, and localStorage persistence.</p>
+            
+            <div class="todo-app">
+                <form id="todo-form" class="todo-input-group">
+                    <label for="todo-input" class="visually-hidden">Add a new task</label>
+                    <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
+                    <button type="submit" aria-label="Add task button">Add Task</button>
+                </form>
+
+                <div class="todo-filters" role="group" aria-label="Filter tasks">
+                    <button type="button" id="filter-all" class="filter-btn active" aria-pressed="true">All</button>
+                    <button type="button" id="filter-active" class="filter-btn" aria-pressed="false">Active</button>
+                    <button type="button" id="filter-completed" class="filter-btn" aria-pressed="false">Completed</button>
+                </div>
+
+                <ul id="todo-list" class="todo-list" aria-live="polite" aria-label="List of tasks">
+                    </ul>
+            </div>
+        </section>
