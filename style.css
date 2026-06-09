@@ -418,3 +418,102 @@ footer {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* ==========================================
+   10. TASK 4: WEATHER DASHBOARD STYLES
+   ========================================== */
+.weather-app {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 1.5rem;
+    max-width: 600px;
+}
+
+.weather-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.weather-input-group input {
+    flex: 1;
+}
+
+.weather-input-group button {
+    width: auto;
+    white-space: nowrap;
+}
+
+.weather-display {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+}
+
+.weather-message {
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+}
+
+.weather-card {
+    animation: fadeIn 0.3s ease;
+}
+
+.weather-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+    color: var(--accent-color);
+}
+
+.weather-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    text-transform: capitalize;
+}
+
+.weather-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.metric-item {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.metric-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.weather-error {
+    color: #dc2626;
+    background-color: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    padding: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Responsive adjustment for small viewports */
+@media (max-width: 480px) {
+    .weather-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
