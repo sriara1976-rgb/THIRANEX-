@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yashwant Sridhar | Professional Portfolio</title>
-    <meta name="description" content="Welcome to the professional portfolio of Yashwant Sridhar. Exploring business analytics, management, and technology solutions.">
+    <title>Yashwant Sridhar | Professional Capstone Portfolio</title>
+    <meta name="description" content="Production-grade full-stack architecture portfolio showcasing modular applications, client-side routing, and external REST API integrations.">
     <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,88 +14,25 @@
 
     <header role="banner">
         <div class="header-container">
-            <div class="logo">YS</div>
+            <div class="logo">YS.CAPSTONE</div>
             <nav aria-label="Main Navigation">
-                <ul>
-                    <li><a href="index.html" aria-current="page">Home</a></li>
-                    <li><a href="#projects-heading">Projects</a></li>
-                    <li><a href="#todo-heading">Tasks</a></li>
-                    <li><a href="#weather-heading">Weather</a></li>
+                <ul id="nav-links">
+                    <li><a href="/" data-link class="active" aria-current="page">Home</a></li>
+                    <li><a href="/tasks" data-link>Task Manager</a></li>
+                    <li><a href="/weather" data-link>Weather App</a></li>
+                    <li><a href="/shop" data-link>E-Commerce Shop</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main id="main-content" tabindex="-1">
-        
-        <section aria-labelledby="hero-heading">
-            <h1 id="hero-heading">Hi, I'm Yashwant Sridhar</h1>
-            <p>Welcome to my professional portfolio. I specialize in bridging the gap between business strategy, analytics, and technological execution.</p>
-        </section>
-
-        <hr>
-
-        <section aria-labelledby="projects-heading">
-            <h2 id="projects-heading">Featured Projects</h2>
-            <div class="projects-grid">
-                <article class="project-card">
-                    <h3>Business Analysis & Risk Management System</h3>
-                    <p>An end-to-end framework evaluating corporate investment risk paradigms and workflow automation.</p>
-                </article>
-                <article class="project-card">
-                    <h3>Supply Chain & Inventory Tracker</h3>
-                    <p>Optimized logistics structure designed to analyze operational efficiency and resource allocation.</p>
-                </article>
+        <div id="app-router-view">
             </div>
-        </section>
-
-        <hr>
-
-        <section aria-labelledby="todo-heading">
-            <h2 id="todo-heading">Interactive Task Manager</h2>
-            <p>Mastering client-side state management, DOM manipulation, and localStorage persistence.</p>
-            
-            <div class="todo-app">
-                <form id="todo-form" class="todo-input-group">
-                    <label for="todo-input" class="visually-hidden">Add a new task</label>
-                    <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
-                    <button type="submit" aria-label="Add task button">Add Task</button>
-                </form>
-
-                <div class="todo-filters" role="group" aria-label="Filter tasks">
-                    <button type="button" id="filter-all" class="filter-btn active" aria-pressed="true">All</button>
-                    <button type="button" id="filter-active" class="filter-btn" aria-pressed="false">Active</button>
-                    <button type="button" id="filter-completed" class="filter-btn" aria-pressed="false">Completed</button>
-                </div>
-
-                <ul id="todo-list" class="todo-list" aria-live="polite" aria-label="List of tasks">
-                    </ul>
-            </div>
-        </section>
-
-        <hr>
-
-        <section aria-labelledby="weather-heading">
-            <h2 id="weather-heading">Real-Time Weather Dashboard</h2>
-            <p>Fetching data dynamically from a public REST API using asynchronous JavaScript, async/await, and rigorous error handling.</p>
-            
-            <div class="weather-app">
-                <form id="weather-form" class="weather-input-group">
-                    <label for="weather-input" class="visually-hidden">Search city weather</label>
-                    <input type="text" id="weather-input" placeholder="Enter city name (e.g., London, Mumbai)..." required autocomplete="off">
-                    <button type="submit" aria-label="Search weather button">Get Weather</button>
-                </form>
-
-                <div id="weather-display" class="weather-display" aria-live="polite">
-                    <p class="weather-message">Search a city to see live metrics.</p>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <footer role="contentinfo">
-        <p>&copy; 2026 Yashwant Sridhar. All rights reserved.</p>
+        <p>&copy; 2026 Yashwant Sridhar. Capstone Deployment Version 1.0.0. All rights reserved.</p>
     </footer>
 
     <script src="app.js"></script>
