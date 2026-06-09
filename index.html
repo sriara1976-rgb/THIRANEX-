@@ -19,7 +19,8 @@
                 <ul>
                     <li><a href="index.html" aria-current="page">Home</a></li>
                     <li><a href="#projects-heading">Projects</a></li>
-                    <li><a href="#contact-heading">Contact</a></li>
+                    <li><a href="#todo-heading">Tasks</a></li>
+                    <li><a href="#weather-heading">Weather</a></li>
                 </ul>
             </nav>
         </div>
@@ -50,27 +51,6 @@
 
         <hr>
 
-        <section aria-labelledby="contact-heading">
-            <h2 id="contact-heading">Get In Touch</h2>
-            <form action="#" method="POST" class="accessible-form">
-                <div class="form-group">
-                    <label for="user-name">Full Name <span aria-hidden="true">*</span></label>
-                    <input type="text" id="user-name" name="name" required autocomplete="name" aria-required="true">
-                </div>
-                <div class="form-group">
-                    <label for="user-email">Email Address <span aria-hidden="true">*</span></label>
-                    <input type="email" id="user-email" name="email" required autocomplete="email" aria-required="true">
-                </div>
-                <div class="form-group">
-                    <label for="user-message">Message <span aria-hidden="true">*</span></label>
-                    <textarea id="user-message" name="message" rows="5" required aria-required="true"></textarea>
-                </div>
-                <button type="submit" aria-label="Submit contact form">Send Message</button>
-            </form>
-        </section>
-
-        <hr>
-
         <section aria-labelledby="todo-heading">
             <h2 id="todo-heading">Interactive Task Manager</h2>
             <p>Mastering client-side state management, DOM manipulation, and localStorage persistence.</p>
@@ -90,6 +70,25 @@
 
                 <ul id="todo-list" class="todo-list" aria-live="polite" aria-label="List of tasks">
                     </ul>
+            </div>
+        </section>
+
+        <hr>
+
+        <section aria-labelledby="weather-heading">
+            <h2 id="weather-heading">Real-Time Weather Dashboard</h2>
+            <p>Fetching data dynamically from a public REST API using asynchronous JavaScript, async/await, and rigorous error handling.</p>
+            
+            <div class="weather-app">
+                <form id="weather-form" class="weather-input-group">
+                    <label for="weather-input" class="visually-hidden">Search city weather</label>
+                    <input type="text" id="weather-input" placeholder="Enter city name (e.g., London, Mumbai)..." required autocomplete="off">
+                    <button type="submit" aria-label="Search weather button">Get Weather</button>
+                </form>
+
+                <div id="weather-display" class="weather-display" aria-live="polite">
+                    <p class="weather-message">Search a city to see live metrics.</p>
+                </div>
             </div>
         </section>
 
