@@ -1,210 +1,294 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // ==========================================
-    // MODULE 1: TASK 3 - TASK MANAGER CODE
+    // 1. MODULAR FRONTEND ROUTER ENGINE
     // ==========================================
-    let state = {
-        todos: JSON.parse(localStorage.getItem('portfolio_todos')) || [],
-        currentFilter: 'all'
-    };
-
-    const todoForm = document.getElementById('todo-form');
-    const todoInput = document.getElementById('todo-input');
-    const todoList = document.getElementById('todo-list');
-    const filterButtons = {
-        all: document.getElementById('filter-all'),
-        active: document.getElementById('filter-active'),
-        completed: document.getElementById('filter-completed')
-    };
-
-    function saveToLocalStorage() {
-        localStorage.setItem('portfolio_todos', JSON.stringify(state.todos));
-    }
-
-    function renderTodos() {
-        if (!todoList) return;
-        todoList.innerHTML = '';
-        
-        const filteredTodos = state.todos.filter(todo => {
-            if (state.currentFilter === 'active') return !todo.completed;
-            if (state.currentFilter === 'completed') return todo.completed;
-            return true;
-        });
-
-        if (filteredTodos.length === 0) {
-            todoList.innerHTML = `<li class="todo-item" style="color: var(--text-secondary);">No tasks found matching this filter.</li>`;
-            return;
+    const routes = {
+        '/': {
+            title: 'Home | Yashwant Sridhar Portfolio',
+            render: () => `
+                <section aria-labelledby="hero-heading">
+                    <h1 id="hero-heading">Hi, I'm Yashwant Sridhar</h1>
+                    <p>Welcome to my professional portfolio capstone project. I specialize in bridging the gap between business strategy, analytics, and technological execution.</p>
+                </section>
+                <hr>
+                <section aria-labelledby="projects-heading">
+                    <h2 id="projects-heading">Featured Engineering Projects</h2>
+                    <div class="projects-grid">
+                        <article class="project-card">
+                            <div class="product-image-placeholder">📊</div>
+                            <div class="product-details">
+                                <h3>Business Analysis & Risk Management System</h3>
+                                <p class="product-description">An end-to-end framework evaluating corporate investment risk paradigms and workflow automation matrices.</p>
+                            </div>
+                        </article>
+                        <article class="project-card">
+                            <div class="product-image-placeholder">📦</div>
+                            <div class="product-details">
+                                <h3>Supply Chain & Inventory Tracker</h3>
+                                <p class="product-description">Optimized logistics structure designed to analyze operational efficiency and resource allocation values.</p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            `,
+            init: () => {}
+        },
+        '/tasks': {
+            title: 'Task Manager | App Module',
+            render: () => `
+                <section aria-labelledby="todo-heading">
+                    <h2 id="todo-heading">Interactive Task Manager</h2>
+                    <p>Mastering client-side state management, DOM manipulation, and localStorage persistence.</p>
+                    <div class="todo-app">
+                        <form id="todo-form" class="todo-input-group">
+                            <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
+                            <button type="submit">Add Task</button>
+                        </form>
+                        <div class="todo-filters" role="group" aria-label="Filter tasks">
+                            <button type="button" id="filter-all" class="filter-btn active">All</button>
+                            <button type="button" id="filter-active" class="filter-btn">Active</button>
+                            <button type="button" id="filter-completed" class="filter-btn">Completed</button>
+                        </div>
+                        <ul id="todo-list" class="todo-list" aria-live="polite"></ul>
+                    </div>
+                </section>
+            `,
+            init: () => initTaskManagerModule()
+        },
+        '/weather': {
+            title: 'Weather Dashboard | Async REST API Module',
+            render: () => `
+                <section aria-labelledby="weather-heading">
+                    <h2 id="weather-heading">Real-Time Weather Dashboard</h2>
+                    <p>Fetching dynamic live structural metrics from public API endpoints safely using asynchronous calls.</p>
+                    <div class="weather-app">
+                        <form id="weather-form" class="weather-input-group">
+                            <input type="text" id="weather-input" placeholder="Enter city name (e.g., New York, Tokyo)..." required>
+                            <button type="submit">Get Weather</button>
+                        </form>
+                        <div id="weather-display" aria-live="polite">
+                            <p class="weather-message">Search a target destination city to initialize live fetch streams.</p>
+                        </div>
+                    </div>
+                </section>
+            `,
+            init: () => initWeatherModule()
+        },
+        '/shop': {
+            title: 'E-Commerce Product Catalog | Capstone Storefront',
+            render: () => `
+                <section aria-labelledby="shop-heading" class="shop-container">
+                    <h2 id="shop-heading">E-Commerce Product Catalog</h2>
+                    <p>Demonstrating highly performance-optimized, modular client layout architectures with deep array manipulation algorithms.</p>
+                    <div class="shop-controls">
+                        <input type="text" id="shop-search" class="search-box" placeholder="Search catalog items..." aria-label="Search catalog products">
+                        <div>Showing item cards dynamically</div>
+                    </div>
+                    <div id="catalog-container" class="catalog-grid"></div>
+                </section>
+            `,
+            init: () => initProductCatalogModule()
         }
+    };
 
-        filteredTodos.forEach(todo => {
-            const li = document.createElement('li');
-            li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-            li.setAttribute('data-id', todo.id);
-
-            li.innerHTML = `
-                <div class="todo-item-left">
-                    <input type="checkbox" id="check-${todo.id}" ${todo.completed ? 'checked' : ''} aria-label="Mark task as complete">
-                    <span id="text-${todo.id}">${escapeHTML(todo.text)}</span>
-                </div>
-                <div class="todo-actions">
-                    <button class="edit-btn" aria-label="Edit task text">Edit</button>
-                    <button class="delete-btn" aria-label="Delete task item">Delete</button>
-                </div>
-            `;
-            todoList.appendChild(li);
+    function router() {
+        const path = window.location.pathname || '/';
+        const route = routes[path] || routes['/'];
+        
+        document.title = route.title;
+        document.getElementById('app-router-view').innerHTML = route.render();
+        
+        // Dynamic active state handler for nav layouts
+        document.querySelectorAll('#nav-links a').forEach(link => {
+            const linkPath = link.getAttribute('href');
+            if(linkPath === path) {
+                link.classList.add('active');
+                link.setAttribute('aria-current', 'page');
+            } else {
+                link.classList.remove('active');
+                link.removeAttribute('aria-current');
+            }
         });
+
+        route.init();
     }
 
-    function escapeHTML(str) {
-        return str.replace(/[&<>'"]/g, 
-            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-        );
-    }
-
-    if (todoForm) {
-        todoForm.addEventListener('submit', (e) => {
+    // Capture Link clicks for SPA seamless Client Routing instead of causing refresh
+    window.addEventListener('click', e => {
+        if (e.target.matches('[data-link]')) {
             e.preventDefault();
-            const text = todoInput.value.trim();
-            if (!text) return;
-
-            state.todos.push({
-                id: Date.now().toString(),
-                text: text,
-                completed: false
-            });
-            saveToLocalStorage();
-            renderTodos();
-            todoInput.value = '';
-            todoInput.focus();
-        });
-    }
-
-    if (todoList) {
-        todoList.addEventListener('click', (e) => {
-            const target = e.target;
-            const todoItem = target.closest('.todo-item');
-            if (!todoItem) return;
-            
-            const id = todoItem.getAttribute('data-id');
-            const todoIndex = state.todos.findIndex(item => item.id === id);
-            if (todoIndex === -1) return;
-
-            if (target.type === 'checkbox') {
-                state.todos[todoIndex].completed = target.checked;
-                saveToLocalStorage();
-                renderTodos();
-            }
-
-            if (target.classList.contains('edit-btn')) {
-                const currentText = state.todos[todoIndex].text;
-                const newText = prompt("Update your task details:", currentText);
-                if (newText !== null && newText.trim() !== "") {
-                    state.todos[todoIndex].text = newText.trim();
-                    saveToLocalStorage();
-                    renderTodos();
-                }
-            }
-
-            if (target.classList.contains('delete-btn')) {
-                state.todos.splice(todoIndex, 1);
-                saveToLocalStorage();
-                renderTodos();
-            }
-        });
-    }
-
-    Object.keys(filterButtons).forEach(filterType => {
-        if (filterButtons[filterType]) {
-            filterButtons[filterType].addEventListener('click', () => {
-                state.currentFilter = filterType;
-                Object.keys(filterButtons).forEach(type => {
-                    if (filterButtons[type]) {
-                        filterButtons[type].classList.toggle('active', type === filterType);
-                        filterButtons[type].setAttribute('aria-pressed', type === filterType ? 'true' : 'false');
-                    }
-                });
-                renderTodos();
-            });
+            window.history.pushState(null, null, e.target.href);
+            router();
         }
     });
 
-    renderTodos();
-
+    window.addEventListener('popstate', router);
 
     // ==========================================
-    // MODULE 2: TASK 4 - REAL-TIME WEATHER API
+    // 2. MODULAR CONTROLLER: TASK MANAGER (Task 3)
     // ==========================================
-    const weatherForm = document.getElementById('weather-form');
-    const weatherInput = document.getElementById('weather-input');
-    const weatherDisplay = document.getElementById('weather-display');
+    function initTaskManagerModule() {
+        let todos = JSON.parse(localStorage.getItem('portfolio_todos')) || [];
+        let currentFilter = 'all';
 
-    if (weatherForm) {
-        weatherForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const city = weatherInput.value.trim();
-            if (!city) return;
+        const todoForm = document.getElementById('todo-form');
+        const todoInput = document.getElementById('todo-input');
+        const todoList = document.getElementById('todo-list');
 
-            // Render safe loading visual state
-            weatherDisplay.innerHTML = `<p class="weather-message">Fetching real-time weather metrics for "${escapeHTML(city)}"...</p>`;
+        function renderTodos() {
+            if (!todoList) return;
+            todoList.innerHTML = '';
+            const filtered = todos.filter(t => currentFilter === 'active' ? !t.completed : currentFilter === 'completed' ? t.completed : true);
+            
+            if(filtered.length === 0) {
+                todoList.innerHTML = `<li class="todo-item" style="color:var(--text-secondary)">No items match filter rules.</li>`;
+                return;
+            }
 
-            // Core Asynchronous Architecture Implementation with catch-all handlers
-            try {
-                // Requesting secure clean JSON payload output from the REST Endpoint
-                const response = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`);
-                
-                // Network pipeline stability verification validation
-                if (!response.ok) {
-                    throw new Error("Target destination city could not be located. Please check spelling.");
-                }
-
-                const data = await response.json();
-                renderWeather(data, city);
-
-            } catch (error) {
-                // Catching and displaying full network exceptions to safe UI views
-                weatherDisplay.innerHTML = `
-                    <div class="weather-error" role="alert">
-                        Error: ${escapeHTML(error.message || "Failed to retrieve connection metrics from API service.")}
+            filtered.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                li.innerHTML = `
+                    <div class="todo-item-left">
+                        <input type="checkbox" ${todo.completed ? 'checked' : ''} class="task-check">
+                        <span>${escapeHTML(todo.text)}</span>
                     </div>
+                    <button class="delete-btn task-del" data-id="${todo.id}">Delete</button>
                 `;
+                todoList.appendChild(li);
+
+                li.querySelector('.task-check').addEventListener('change', () => {
+                    todo.completed = !todo.completed;
+                    localStorage.setItem('portfolio_todos', JSON.stringify(todos));
+                    renderTodos();
+                });
+
+                li.querySelector('.task-del').addEventListener('click', () => {
+                    todos = todos.filter(t => t.id !== todo.id);
+                    localStorage.setItem('portfolio_todos', JSON.stringify(todos));
+                    renderTodos();
+                });
+            });
+        }
+
+        if(todoForm) {
+            todoForm.addEventListener('submit', e => {
+                e.preventDefault();
+                if(!todoInput.value.trim()) return;
+                todos.push({ id: Date.now().toString(), text: todoInput.value.trim(), completed: false });
+                localStorage.setItem('portfolio_todos', JSON.stringify(todos));
+                todoInput.value = '';
+                renderTodos();
+            });
+        }
+
+        ['all', 'active', 'completed'].forEach(f => {
+            const btn = document.getElementById(`filter-${f}`);
+            if(btn) {
+                btn.addEventListener('click', () => {
+                    currentFilter = f;
+                    ['all', 'active', 'completed'].forEach(x => document.getElementById(`filter-${x}`).classList.toggle('active', x === f));
+                    renderTodos();
+                });
             }
         });
+        renderTodos();
     }
 
-    // Dynamic Object Parsing Renderer implementation strategy
-    function renderWeather(data, searchCity) {
-        // Parsing highly nested layout data structures returned from standard JSON payload securely
-        const currentCondition = data.current_condition[0];
-        const nearestArea = data.nearest_area[0];
-        
-        const tempC = currentCondition.temp_C;
-        const humidity = currentCondition.humidity;
-        const windSpeed = currentCondition.windspeedKmph;
-        const description = currentCondition.weatherDesc[0].value;
-        
-        const resolvedCity = nearestArea.areaName[0].value;
-        const resolvedCountry = nearestArea.country[0].value;
+    // ==========================================
+    // 3. MODULAR CONTROLLER: WEATHER ENGINE (Task 4)
+    // ==========================================
+    function initWeatherModule() {
+        const f = document.getElementById('weather-form');
+        const inp = document.getElementById('weather-input');
+        const disp = document.getElementById('weather-display');
 
-        weatherDisplay.innerHTML = `
-            <div class="weather-card">
-                <h3>${escapeHTML(resolvedCity)}, ${escapeHTML(resolvedCountry)}</h3>
-                <p class="weather-desc">${escapeHTML(description)}</p>
-                
-                <div class="weather-metrics-grid">
-                    <div class="metric-item">
-                        <div class="metric-label">Temperature</div>
-                        <div class="metric-value">${escapeHTML(tempC)}°C</div>
-                    </div>
-                    <div class="metric-item">
-                        <div class="metric-label">Humidity</div>
-                        <div class="metric-value">${escapeHTML(humidity)}%</div>
-                    </div>
-                    <div class="metric-item">
-                        <div class="metric-label">Wind Speed</div>
-                        <div class="metric-value">${escapeHTML(windSpeed)} km/h</div>
-                    </div>
-                </div>
-            </div>
-        `;
+        if(f) {
+            f.addEventListener('submit', async e => {
+                e.preventDefault();
+                const city = inp.value.trim();
+                if(!city) return;
+                disp.innerHTML = `<p class="weather-message">Processing active API stream links...</p>`;
+                try {
+                    const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`);
+                    if(!res.ok) throw new Error("City not found.");
+                    const data = await res.json();
+                    const curr = data.current_condition[0];
+                    const area = data.nearest_area[0];
+                    disp.innerHTML = `
+                        <div class="weather-card">
+                            <h3>${escapeHTML(area.areaName[0].value)}, ${escapeHTML(area.country[0].value)}</h3>
+                            <p class="weather-desc">${escapeHTML(curr.weatherDesc[0].value)}</p>
+                            <div class="weather-metrics-grid">
+                                <div class="metric-item"><div class="metric-label">Temp</div><div class="metric-value">${curr.temp_C}°C</div></div>
+                                <div class="metric-item"><div class="metric-label">Humidity</div><div class="metric-value">${curr.humidity}%</div></div>
+                                <div class="metric-item"><div class="metric-label">Wind</div><div class="metric-value">${curr.windspeedKmph} km/h</div></div>
+                            </div>
+                        </div>`;
+                } catch (err) {
+                    disp.innerHTML = `<div class="weather-error">Pipeline Error: ${escapeHTML(err.message)}</div>`;
+                }
+            });
+        }
     }
+
+    // ==========================================
+    // 4. MODULAR CONTROLLER: CAPSTONE CATALOG (Task 5)
+    // ==========================================
+    function initProductCatalogModule() {
+        // Optimized Data Object Array Architecture
+        const products = [
+            { id: 1, title: "Elite Analytics Engine", category: "Software", price: "$299.00", icon: "📈", desc: "Enterprise risk mitigation framework with built-in workflow visual structures." },
+            { id: 2, title: "Automated Logix Hub", category: "Hardware", price: "$849.00", icon: "⚡", desc: "Next-gen automation module parsing structural metrics in real-time latency pipelines." },
+            { id: 3, title: "Quantum Sync Node", category: "Networking", price: "$120.00", icon: "🌐", desc: "Ultra-secure node establishing decentralized cloud architecture links seamlessly." },
+            { id: 4, title: "Matrix Ledger System", category: "Security", price: "$450.00", icon: "🔐", desc: "Cryptographic state verification framework neutralizing unauthorized injection parameters." }
+        ];
+
+        const container = document.getElementById('catalog-container');
+        const searchInput = document.getElementById('shop-search');
+
+        function renderCatalog(items) {
+            if(!container) return;
+            container.innerHTML = '';
+            if(items.length === 0) {
+                container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-secondary);">No products match your search entry query.</p>`;
+                return;
+            }
+
+            items.forEach(prod => {
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.innerHTML = `
+                    <div class="product-image-placeholder">${prod.icon}</div>
+                    <div class="product-details">
+                        <span class="product-category">${escapeHTML(prod.category)}</span>
+                        <h3 class="product-title">${escapeHTML(prod.title)}</h3>
+                        <p class="product-description">${escapeHTML(prod.desc)}</p>
+                        <div class="product-footer">
+                            <span class="product-price">${prod.price}</span>
+                            <button class="add-cart-btn" onclick="alert('Item added to active session checkout basket!')">Buy Now</button>
+                        </div>
+                    </div>`;
+                container.appendChild(div);
+            });
+        }
+
+        if(searchInput) {
+            searchInput.addEventListener('input', e => {
+                const query = e.target.value.toLowerCase().trim();
+                const filtered = products.filter(p => p.title.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+                renderCatalog(filtered);
+            });
+        }
+
+        renderCatalog(products);
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
+    }
+
+    // Intercept fresh page load executions to direct standard index configurations correctly
+    router();
 });
